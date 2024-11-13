@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import { Check } from "lucide-react";
-import Image from "next/image";
+import Phone from "@/components/Phone";
+import { Check, Star } from "lucide-react";
 
 export default function Home() {
   return (
@@ -32,11 +32,65 @@ export default function Home() {
                     High-quality, durable material
                   </li>{" "}
                   <li className="flex gap-1.5 items-center text-left">
+                    <Check className="text-green-600 h-5 w-5 shrink-0" />5 year
+                    print guarantee
+                  </li>{" "}
+                  <li className="flex gap-1.5 items-center text-left">
                     <Check className="text-green-600 h-5 w-5 shrink-0" />
-                      
+                    Modern iPhone models supported
                   </li>
                 </div>
               </ul>
+              <div className="m-12 flex flex-col sm:flex-row items-center sm:items-start gap-5">
+                <div className="flex -space-x-4">
+                  <img
+                    src="users/user-1.png"
+                    className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-100"
+                    alt=""
+                  />
+                  <img
+                    src="users/user-2.png"
+                    className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-100"
+                    alt=""
+                  />
+                  <img
+                    src="users/user-3.png"
+                    className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-100"
+                    alt=""
+                  />
+                  <img
+                    src="users/user-4.jpg"
+                    className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-100"
+                    alt=""
+                  />
+                  <img
+                    src="users/user-5.jpg"
+                    className="inline-block h-10 w-10 object-cover rounded-full ring-2 ring-slate-100"
+                    alt=""
+                  />
+                </div>
+                <div className="flex flex-col items-center justify-between sm:items-start">
+                  <div className="flex gap-0.5">
+                    <Star className="h-4 w-4 text-green-600 fill-green-600" />
+                    <Star className="h-4 w-4 text-green-600 fill-green-600" />
+                    <Star className="h-4 w-4 text-green-600 fill-green-600" />
+                    <Star className="h-4 w-4 text-green-600 fill-green-600" />
+                    <Star className="h-4 w-4 text-green-600 fill-green-600" />
+                  </div>
+                  <p>
+                    <span className="font-semibold">1,250</span>
+                    Happy customers
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-span-full lg:col-span-1 w-full flex justify-center px-8 sm:px-16 md:px-0 mt-32 lg:mx-0 lg:mt-20">
+            <div className="relative md:max-w-xl">
+              <img src="/your-image.png" className="absolute w-40 lg:w-52 left-56 -top-20 select-none hidden sm:block lg:hidden xl:block" />
+              <img src="/line.png" className="absolute w-20 -left-6 -bottom-6 select-none" alt="" />
+              <Phone className="w-64" imgSrc="/testimonials/1.jpg" />
             </div>
           </div>
         </MaxWidthWrapper>
