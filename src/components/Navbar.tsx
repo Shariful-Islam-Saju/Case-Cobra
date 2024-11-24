@@ -40,16 +40,6 @@ const Navbar = () => {
                     Dashboard{" "}
                   </Link>
                 )}
-                <Link
-                  href={"/configure/upload"}
-                  className={buttonVariants({
-                    size: "sm",
-                    className: "hidden sm:flex items-center gap-1",
-                  })}
-                >
-                  Create case
-                  <ArrowRight className="ml-1.5 h-5 w-5" />
-                </Link>
               </>
             ) : (
               <>
@@ -73,20 +63,18 @@ const Navbar = () => {
                   {" "}
                   Login
                 </Link>
-                <div className="h-8 bg-zinc-200 w-px hidden sm:block">
-                  <Link
-                    href={"/configure/upload"}
-                    className={buttonVariants({
-                      size: "sm",
-                      className: "hidden sm:flex items-center gap-1",
-                    })}
-                  >
-                    Create case
-                    <ArrowRight className="ml-1.5 h-5 w-5" />
-                  </Link>
-                </div>
               </>
             )}
+            <Link
+              href={"/configure/upload"}
+              className={buttonVariants({
+                size: "sm",
+                className: "hidden sm:flex items-center gap-1",
+              })}
+            >
+              Create case
+              <ArrowRight className="ml-1.5 h-5 w-5" />
+            </Link>
           </div>
         </div>
       </MaxWidthWrapper>
