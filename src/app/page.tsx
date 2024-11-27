@@ -127,6 +127,30 @@ export default function Home() {
                 <Star className="h-5 w-5 text-green-600 fill-green-600" />
                 <Star className="h-5 w-5 text-green-600 fill-green-600" />
               </div>
+              <div className="text-lg leading-8">
+                <p>
+                  &quot; The case feels durable and I even got a compliment on
+                  the design. Had the case for two and a half months now and{" "}
+                  <span className="p-1.5 bg-slate-800 text-white">
+                    {" "}
+                    the image is super clear
+                  </span>
+                  , on the case I had before, the image started fading into
+                  yellow-ish color after a couple weeks. Love it. &quot;
+                </p>
+              </div>
+              <div className="flex gap-4 mt-2">
+                <img
+                  src="/users/user-1.png"
+                  className="rounded-full h-12 w-12 object-cover"
+                  alt="user"
+                />
+                <div className="flex flex-col">
+                  <p className="font-semibold">
+                    
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </MaxWidthWrapper>
