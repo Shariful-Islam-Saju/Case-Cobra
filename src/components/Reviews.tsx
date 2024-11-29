@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from "react";
+import React, { HTMLAttributes, useEffect, useRef, useState } from "react";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { useInView } from "framer-motion";
 import { col, div } from "framer-motion/client";
 import { cn } from "@/lib/utils";
+import Phone from "./Phone";
 
 const PHONES = [
   "/testimonials/1.jpg",
@@ -41,6 +42,7 @@ function ReviewColumn({
 }) {
   const columnRef = useRef<HTMLDivElement>(null);
   const [columnHeight, setColumnHeight] = useState(0);
+  const duration = `${columnHeight * msPerPixel}ms`;
   useEffect(() => {
     if (columnRef.current === null) return;
     const resizeObserver = new window.ResizeObserver(() => {
@@ -58,13 +60,53 @@ function ReviewColumn({
       ref={columnRef}
       className={cn("animate-marquee space-y-8 py-4", className)}
       style={{ "--marquee-duration": duration } as React.CSSProperties}
-    ></div>
+    >
+      {reviews.concat(reviews).map((imgSrc, reviewIndex) => (
+        <Review
+          key={reviewIndex}
+          imgSrc={imgSrc}
+          className={reviewClassName?.(reviewIndex % reviewIndex)}
+        />
+      ))}
+    </div>
+  );
+}
+
+interface ReviewProps extends HTMLAttributes<HTMLDivElement> {
+  imgSrc: string;
+}
+
+function Review({ imgSrc, className, ...props }: ReviewProps) {
+  const POSSIBLE_ANIMATION_DELAYS = [
+    "0s",
+    "0.1s",
+    "0.2s",
+    "0.3s",
+    "0.4s",
+    "0.5s",
+  ];
+
+  const animationDelay =
+    POSSIBLE_ANIMATION_DELAYS[
+      Math.floor(Math.random() * POSSIBLE_ANIMATION_DELAYS.length)
+    ];
+  return (
+    <div
+      className={cn(
+        "animate-fade-in rounded-[2.25rem] bg-white p-6 opacity-0 shadow-xl shadow-slate-900/5",
+        className
+      )}
+      style={{ animationDelay }}
+      {...props}
+    >
+      <Phone imgSrc={imgSrc} />
+    </div>
   );
 }
 
 function ReviewGrid() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const inInView = useInView(containerRef, { once: true, amount: 0.5 });
+  const isInView = useInView(containerRef, { once: true, amount: 0.5 });
   const columns = splitArray(PHONES, 3);
   const columns1 = columns[0];
   const columns2 = columns[1];
@@ -73,7 +115,37 @@ function ReviewGrid() {
     <div
       className="relative -mx-4 mt-16 grid h-[49rem] max-h-[150vh] grid-cols-1 items-start gap-8 overflow-hidden px-4 sm:mt-20 md:grid-cols-2 lg:grid-cols-3"
       ref={containerRef}
-    ></div>
+    >
+      {isInView && (
+        <>
+          <ReviewColumn
+            reviews={{ ...columns1, ...columns3.flat(), ...columns2 }}
+            reviewClassName={(reviewIndex) =>
+              cn({
+                "md:hidden":
+                  reviewIndex >= columns1.length + columns3[0].length,
+                "lg:hidden": reviewIndex >= columns1.length,
+              })
+            }
+            msPerPixel={10}
+          />{" "}
+          <ReviewColumn
+            reviews={[...columns2, ...columns3[1]]}
+            className="hidden md:block"
+            reviewClassName={(reviewIndex) =>
+              reviewIndex >= columns2.length ? "lg:hidden" : ""
+            }
+            msPerPixel={15}
+          />{" "}
+          <ReviewColumn
+           reviews={columns3.flat()}
+            className='hidden md:block'
+            msPerPixel={10}
+          />
+      
+        </>
+      )}
+    </div>
   );
 }
 
