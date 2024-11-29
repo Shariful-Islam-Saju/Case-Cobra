@@ -119,7 +119,7 @@ function ReviewGrid() {
       {isInView && (
         <>
           <ReviewColumn
-            reviews={{ ...columns1, ...columns3.flat(), ...columns2 }}
+            reviews={[...columns1, ...columns3.flat(), ...columns2]}
             reviewClassName={(reviewIndex) =>
               cn({
                 "md:hidden":
@@ -138,13 +138,14 @@ function ReviewGrid() {
             msPerPixel={15}
           />{" "}
           <ReviewColumn
-           reviews={columns3.flat()}
-            className='hidden md:block'
+            reviews={columns3.flat()}
+            className="hidden md:block"
             msPerPixel={10}
           />
-      
         </>
       )}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-slate-100"></div>{" "}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-100"></div>
     </div>
   );
 }
