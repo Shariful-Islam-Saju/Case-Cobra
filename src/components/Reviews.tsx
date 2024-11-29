@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { useInView } from "framer-motion";
+import { col, div } from "framer-motion/client";
+import { cn } from "@/lib/utils";
 
 const PHONES = [
   "/testimonials/1.jpg",
@@ -37,7 +39,27 @@ function ReviewColumn({
   reviewClassName?: (reviewIndex: number) => string;
   msPerPixel?: number;
 }) {
-  
+  const columnRef = useRef<HTMLDivElement>(null);
+  const [columnHeight, setColumnHeight] = useState(0);
+  useEffect(() => {
+    if (columnRef.current === null) return;
+    const resizeObserver = new window.ResizeObserver(() => {
+      setColumnHeight(columnRef.current?.offsetHeight ?? 0);
+    });
+
+    resizeObserver.observe(columnRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+  return (
+    <div
+      ref={columnRef}
+      className={cn("animate-marquee space-y-8 py-4", className)}
+      style={{ "--marquee-duration": duration } as React.CSSProperties}
+    ></div>
+  );
 }
 
 function ReviewGrid() {
