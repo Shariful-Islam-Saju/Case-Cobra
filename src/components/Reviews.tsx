@@ -4,7 +4,6 @@
 import React, { HTMLAttributes, useEffect, useRef, useState } from "react";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { useInView } from "framer-motion";
-import { col, div } from "framer-motion/client";
 import { cn } from "@/lib/utils";
 import Phone from "./Phone";
 
@@ -65,7 +64,7 @@ function ReviewColumn({
         <Review
           key={reviewIndex}
           imgSrc={imgSrc}
-          className={reviewClassName?.(reviewIndex % reviewIndex)}
+          className={reviewClassName?.(reviewIndex % reviews.length)}
         />
       ))}
     </div>
