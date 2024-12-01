@@ -1,10 +1,13 @@
 'use server'
+import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import React from 'react'
 
-const page = async () => {
+const Page = async () => {
   return (
-    <div>page</div>
+    <MaxWidthWrapper className='mt-10'>
+      <h1> Hello, This is Shariful Islam. I will make this design page as soon as possible</h1>
+    </MaxWidthWrapper>
   )
 }
 
-export default page
+export default Page
