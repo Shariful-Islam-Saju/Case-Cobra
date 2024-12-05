@@ -1,6 +1,8 @@
 "use server";
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import { db } from "@/db";
+import { notFound } from "next/navigation";
 import React from "react";
+import DesignConfigator from "./DesignConfigator";
 
 interface propsType {
   searchParams: {
@@ -9,10 +11,27 @@ interface propsType {
 }
 const Page = async ({ searchParams }: propsType) => {
   const { id } = searchParams;
+  if (!id || typeof id !== "string") {
+    notFound();
+  }
+
+  const configuration = await db.configuration.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!configuration) {
+    notFound();
+  }
+  const { imageUrl, height, width } = configuration;
+
   return (
-    <MaxWidthWrapper className="mt-10">
-      <h1>{id}</h1>
-    </MaxWidthWrapper>
+    <DesignConfigator
+      configId={configuration.id}
+      imgUrl={imageUrl}
+      imageDimensions={{ height, width }}
+    />
   );
 };
 
