@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
@@ -10,29 +11,34 @@ interface propsType {
   };
 }
 const Page = async ({ searchParams }: propsType) => {
-  const { id } = searchParams;
-  if (!id || typeof id !== "string") {
+  try {
+    const { id } = await searchParams;
+    if (!id || typeof id !== "string") {
+      throw new Error("Not Found");
+    }
+
+    const configuration = await db.configuration.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!configuration) {
+      throw new Error("Not Found");
+    }
+    const { imageUrl, height, width } = configuration;
+
+    return (
+      <DesignConfigator
+        configId={configuration.id}
+        imgUrl={imageUrl}
+        imageDimensions={{ height, width }}
+      />
+    );
+  } catch (error: any) {
+    console.error(error.message);
     notFound();
   }
-
-  const configuration = await db.configuration.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  if (!configuration) {
-    notFound();
-  }
-  const { imageUrl, height, width } = configuration;
-
-  return (
-    <DesignConfigator
-      configId={configuration.id}
-      imgUrl={imageUrl}
-      imageDimensions={{ height, width }}
-    />
-  );
 };
 
 export default Page;
