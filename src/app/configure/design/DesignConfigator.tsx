@@ -3,11 +3,15 @@ import React from "react";
 
 interface propsType {
   configId: string;
-  imgUrl: string;
+  imageUrl: string;
   imageDimensions: { width: number; height: number };
 }
 
-const DesignConfigator = ({ configId, imageDimensions, imgUrl }: propsType) => {
+const DesignConfigator = ({
+  configId,
+  imageDimensions,
+  imageUrl,
+}: propsType) => {
   return <div>DesignConfigator</div>;
 };
 
