@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
+import HandleComponent from "@/components/HandleComponent";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import {RadioGroup} from '@headlessui/react'
 import NextImage from "next/image";
-import React from "react";
-
+import { Rnd } from "react-rnd";
 interface propsType {
   configId: string;
   imageUrl: string;
@@ -38,14 +41,49 @@ const DesignConfigator = ({
             )}
           />
         </div>
-        <div className="relative w-full h-full">
-          <NextImage
-            src={imageUrl}
-            fill
-            alt="your image"
-            className="pointer-events-none"
+        <Rnd
+          default={{
+            x: 150,
+            y: 205,
+            height: imageDimensions.height / 4,
+            width: imageDimensions.width / 4,
+          }}
+          lockAspectRatio
+          className="absolute z-20 border-[3px] border-primary"
+          resizeHandleComponent={{
+            bottomRight: <HandleComponent />,
+            bottomLeft: <HandleComponent />,
+            topRight: <HandleComponent />,
+            topLeft: <HandleComponent />,
+          }}
+        >
+          <div className="relative w-full h-full">
+            <NextImage
+              src={imageUrl}
+              fill
+              alt="your image"
+              className="pointer-events-none"
+            />
+          </div>
+        </Rnd>
+      </div>
+      <div className="h-[37.5rem] flex flex-col bg-white">
+        <ScrollArea className="relative flex-1 overflow-auto">
+          <div
+            aria-hidden="true"
+            className="absolute z-10 inset-x-0 bottom-0 h-12 bg-gradient-to-t from-white pointer-events-none"
           />
-        </div>
+
+          <div className="px-8 pb-12 pt-8">
+            <h2 className="tracking-tight font-bold text-3xl">
+              Customize your case
+            </h2>
+            <div className="w-full h-px bg-zinc-200 my-6" />
+            <div className="relative mt-4 h-full flex flex-col justify-between">
+               <RadioGroup value ></RadioGroup>
+            </div>
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );
