@@ -9,8 +9,8 @@ import DesignConfigator from "./DesignConfigator";
 //   };
 // }
 
-const Page = async ({ searchParams }:any) => {
-  const { id } = searchParams;
+const Page = async ({ searchParams }: any) => {
+  const { id } = await searchParams;
 
   if (!id || typeof id !== "string") {
     return notFound();
