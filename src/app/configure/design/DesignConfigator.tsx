@@ -120,6 +120,7 @@ const DesignConfigator = ({
                   ))}
                 </div>
               </RadioGroup>
+              
             </div>
           </div>
         </ScrollArea>
