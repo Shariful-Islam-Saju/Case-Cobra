@@ -1,3 +1,6 @@
+// bg-zinc-900 border-zinc-900
+// bg-blue-950 border-blue-950
+// bg-rose-950 border-rose-950
 export const COLORS = [
   {
     labal: "Black",
@@ -15,4 +18,3 @@ export const COLORS = [
     tw: "rose-950",
   },
 ] as const;
-

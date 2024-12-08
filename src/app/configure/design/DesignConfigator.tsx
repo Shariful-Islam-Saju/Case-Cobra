@@ -2,10 +2,11 @@
 "use client";
 import HandleComponent from "@/components/HandleComponent";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { COLORS } from "@/validators/option-validator";
-import { RadioGroup } from "@headlessui/react";
+import { Radio, RadioGroup } from "@headlessui/react";
 import NextImage from "next/image";
 import { useState } from "react";
 import { Rnd } from "react-rnd";
@@ -20,7 +21,7 @@ const DesignConfigator = ({
   imageDimensions,
   imageUrl,
 }: propsType) => {
-  const [validators, setValidators] = useState<{
+  const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
   }>({
     color: COLORS[0],
@@ -43,8 +44,8 @@ const DesignConfigator = ({
           <div className="absolute z-40 inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.6)]" />
           <div
             className={cn(
-              "absolute inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px]",
-              `bg-blue-950`
+              "absolute inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px] ",
+              `bg-${options.color.tw}`
             )}
           />
         </div>
@@ -87,7 +88,38 @@ const DesignConfigator = ({
             </h2>
             <div className="w-full h-px bg-zinc-200 my-6" />
             <div className="relative mt-4 h-full flex flex-col justify-between">
-              <RadioGroup ></RadioGroup>
+              <RadioGroup
+                value={options.color}
+                onChange={(val) => {
+                  setOptions((prev) => {
+                    return { ...prev, color: val };
+                  });
+                }}
+              >
+                <Label>Color: {options.color.labal}</Label>
+                <div className="mt-3 flex items-center space-x-3">
+                  {COLORS.map((color) => (
+                    <Radio
+                      key={color.labal}
+                      value={color}
+                      className={({ checked }) =>
+                        cn(
+                          "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 active:ring-0 focus:ring-0 active:outline-none focus:outline-none border-2 border-transparent",
+                          {
+                            [`border-${color.tw}`]: checked,
+                          }
+                        )
+                      }
+                    >
+                      <span
+                        className={cn(
+                          `bg-${color.tw} h-8 w-8 rounded-full border border-black border-opacity-10  `
+                        )}
+                      ></span>
+                    </Radio>
+                  ))}
+                </div>
+              </RadioGroup>
             </div>
           </div>
         </ScrollArea>
