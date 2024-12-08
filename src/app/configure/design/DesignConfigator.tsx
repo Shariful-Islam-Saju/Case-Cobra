@@ -105,22 +105,20 @@ const DesignConfigator = ({
                       className={({ checked }) =>
                         cn(
                           "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 active:ring-0 focus:ring-0 active:outline-none focus:outline-none border-2 border-transparent",
-                          {
-                            [`border-${color.tw}`]: checked,
-                          }
+                          checked ? `border-${color.tw}` : ""
                         )
                       }
                     >
                       <span
                         className={cn(
-                          `bg-${color.tw} h-8 w-8 rounded-full border border-black border-opacity-10  `
+                          " h-8 w-8 rounded-full border border-black border-opacity-10 ",
+                          `bg-${color.tw}`
                         )}
                       ></span>
                     </Radio>
                   ))}
                 </div>
               </RadioGroup>
-              
             </div>
           </div>
         </ScrollArea>

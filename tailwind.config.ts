@@ -77,6 +77,17 @@ export default {
       },
     },
   },
+  safelist: [
+    "bg-zinc-900",
+    "border-zinc-900",
+    "bg-blue-950",
+    "border-blue-950",
+    "bg-rose-950",
+    "border-rose-950",
+  ],
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+// bg-zinc-900 border-zinc-900
+// bg-blue-950 border-blue-950
+// bg-rose-950 border-rose-950
