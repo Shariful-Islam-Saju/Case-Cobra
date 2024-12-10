@@ -84,6 +84,8 @@ export default {
     "border-blue-950",
     "bg-rose-950",
     "border-rose-950",
+    "border-yellow-500",
+    "bg-yellow-500",
   ],
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],

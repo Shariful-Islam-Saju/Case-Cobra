@@ -17,4 +17,9 @@ export const COLORS = [
     value: "rose",
     tw: "rose-950",
   },
+  {
+    labal: "Yellow",
+    value: "yellow",
+    tw: "yellow-500",
+  },
 ] as const;
