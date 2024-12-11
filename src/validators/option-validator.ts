@@ -1,5 +1,8 @@
 // bg-zinc-900 border-zinc-900
 // bg-blue-950 border-blue-950
+
+import { PRODUCT_PRICES } from "@/config/product";
+
 // bg-rose-950 border-rose-950
 export const COLORS = [
   {
@@ -56,9 +59,36 @@ export const MODEL = {
 
 export const MATERIALS = {
   name: "material",
-  options: [{
-    label: "Silicone",
-    value: "silicone",
+  options: [
+    {
+      label: "Silicone",
+      value: "silicone",
+      description: undefined,
+      price: PRODUCT_PRICES.material.silicone,
+    },
+    {
+      label: "Soft Polycarbonate",
+      value: "polycarbonate",
+      description: "Scratch-Resistant Coating",
+      price: PRODUCT_PRICES.material.polycarbonate,
+    },
+  ],
+} as const;
 
-  }]
-}
+export const FINISHES = {
+  name: "finish",
+  options: [
+    {
+      label: "Smooth Finish",
+      value: "smooth",
+      description: undefined,
+      price: PRODUCT_PRICES.finish.smooth,
+    },
+    {
+      label: "Textured Finish",
+      value: "textured",
+      description: "Soft Grippy Texture",
+      price: PRODUCT_PRICES.finish.textured,
+    },
+  ],
+} as const;

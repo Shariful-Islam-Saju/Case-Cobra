@@ -12,8 +12,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { COLORS, MODEL } from "@/validators/option-validator";
-import { Radio, RadioGroup } from "@headlessui/react";
+import {
+  COLORS,
+  FINISHES,
+  MATERIALS,
+  MODEL,
+} from "@/validators/option-validator";
+import { Description, Radio, RadioGroup } from "@headlessui/react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import NextImage from "next/image";
 import { useState } from "react";
@@ -32,9 +37,13 @@ const DesignConfigator = ({
   const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
     model: (typeof MODEL.options)[number];
+    finish: (typeof FINISHES.options)[number];
+    material: (typeof MATERIALS.options)[number];
   }>({
     color: COLORS[0],
     model: MODEL.options[5],
+    finish: FINISHES.options[0],
+    material: MATERIALS.options[0],
   });
   return (
     <div className="relative mt-20 grid md:grid-cols-3 mb-20 pb-20 sm:grid-cols-1 ">
@@ -177,6 +186,55 @@ const DesignConfigator = ({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+                {[MATERIALS, FINISHES].map(
+                  ({ name, options: selectableOptions }) => {
+                    return (
+                      <RadioGroup
+                        key={name}
+                        value={options[name]}
+                        onChange={(val) => {
+                          setOptions((prev) => {
+                            return { ...prev, [name]: val };
+                          });
+                        }}
+                      >
+                        <Label>
+                          {name.slice(0, 1).toUpperCase() + name.slice(1)}
+                        </Label>
+                        <div className="mt-3 space-y-4">
+                          {selectableOptions.map((option) => (
+                            <Radio
+                              key={option.label}
+                              value={option}
+                              className={({ checked }) =>
+                                cn(
+                                  "relative block cursor-pointer rounded-lg bg-white px-6 py-4 shadow-sm  border-2 border-zinc-200 focus:outline-none ring-0 focus:ring-0 outline-none sm:flex sm:justify-between",
+                                  { "border-primary": checked }
+                                )
+                              }
+                            >
+                              <span className="flex items-center ">
+                                <span className="flex flex-col text-sm">
+                                  <Label className="font-medium text-gray-900">
+                                    {option.label}
+                                  </Label>
+                                  {option.description && (
+                                    <Description className="text-gray-500">
+                                      {" "}
+                                      <span className="block sm:inline">
+                                        {option.description}
+                                      </span>
+                                    </Description>
+                                  )}
+                                </span>
+                              </span>
+                            </Radio>
+                          ))}
+                        </div>
+                      </RadioGroup>
+                    );
+                  }
+                )}
               </div>
             </div>
           </div>
