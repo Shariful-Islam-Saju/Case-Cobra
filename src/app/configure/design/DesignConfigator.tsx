@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import {
   COLORS,
   FINISHES,
@@ -215,11 +215,14 @@ const DesignConfigator = ({
                             >
                               <span className="flex items-center ">
                                 <span className="flex flex-col text-sm">
-                                  <Label  className="font-medium text-gray-900">
+                                  <Label className="font-medium text-gray-900">
                                     {option.label}
                                   </Label>
                                   {option.description && (
-                                    <Description as="span" className="text-gray-500">
+                                    <Description
+                                      as="span"
+                                      className="text-gray-500"
+                                    >
                                       {" "}
                                       <span className="block sm:inline">
                                         {option.description}
@@ -228,11 +231,13 @@ const DesignConfigator = ({
                                   )}
                                 </span>
                               </span>
-                              <Description as="span" className='mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right'>
+                              <Description
+                                as="span"
+                                className="mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right"
+                              >
                                 <span className="font-medium text-gray-900">
-                                  ${option.price}
+                                  {formatPrice(option.price / 100)}
                                 </span>
-
                               </Description>
                             </Radio>
                           ))}
