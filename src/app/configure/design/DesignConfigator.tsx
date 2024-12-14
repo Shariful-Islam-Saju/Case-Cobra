@@ -22,8 +22,9 @@ import {
 import { Description, Radio, RadioGroup } from "@headlessui/react";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import NextImage from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Rnd } from "react-rnd";
+
 interface propsType {
   configId: string;
   imageUrl: string;
@@ -46,12 +47,41 @@ const DesignConfigator = ({
     finish: FINISHES.options[0],
     material: MATERIALS.options[0],
   });
+
+  const [renderedDimension, setRenderedDimension] = useState({
+    widht: imageDimensions.width / 3,
+    height: imageDimensions.height / 3,
+  });
+
+  const [rederedPosition, setRenderedPosition] = useState({
+    x: 200,
+    y: 200,
+  });
+
+  const phoneCaseRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  async function saveConfiguration() {
+    try {
+      const {
+        left: caseLeft,
+        top: caseTop,
+        width,
+        height,
+      } = phoneCaseRef.current!.getBoundingClientRect();
+      const {left: containerLeft, top:containerTop } = containerRef.current!.getBoundingClientRect()
+    } catch (error) {}
+  }
   return (
     <div className="relative mt-20 grid md:grid-cols-3 mb-20 pb-20 sm:grid-cols-1 ">
-      <div className="relative h-[37.5rem] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+      <div
+        ref={containerRef}
+        className="relative h-[37.5rem] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      >
         <div className="relative w-60 bg-opacity-50 pointer-events-none aspect-[896/1831]">
           <AspectRatio
             ratio={896 / 1831}
+            ref={phoneCaseRef}
             className="pointer-events-none relative z-50 aspect-[896/1831] w-full"
           >
             <NextImage
@@ -77,6 +107,20 @@ const DesignConfigator = ({
             width: imageDimensions.width / 3,
           }}
           lockAspectRatio
+          onResizeStop={(_, __, ref, ___, { x, y }) => {
+            setRenderedDimension({
+              height: parseInt(ref.style.height.slice(0, -2)),
+              widht: parseInt(ref.style.width.slice(0, -2)),
+            });
+            setRenderedPosition({
+              x,
+              y,
+            });
+          }}
+          onDragStop={(_, data) => {
+            const { x, y } = data;
+            setRenderedPosition({ x, y });
+          }}
           className="absolute z-20 border-[3px] border-primary"
           resizeHandleComponent={{
             bottomRight: <HandleComponent />,
@@ -260,7 +304,7 @@ const DesignConfigator = ({
                   BASE_PRICE + options.finish.price + options.material.price
                 )}
               </p>
-              <Button size={'sm'} className="w-full">
+              <Button size={"sm"} className="w-full">
                 Continue
                 <ArrowRight className="h-4 w-4 ml-1.5 inline " />
               </Button>
