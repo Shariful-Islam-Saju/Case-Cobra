@@ -49,11 +49,11 @@ const DesignConfigator = ({
   });
 
   const [renderedDimension, setRenderedDimension] = useState({
-    widht: imageDimensions.width / 3,
+    width: imageDimensions.width / 3,
     height: imageDimensions.height / 3,
   });
 
-  const [rederedPosition, setRenderedPosition] = useState({
+  const [renderedPosition, setRenderedPosition] = useState({
     x: 200,
     y: 200,
   });
@@ -69,9 +69,45 @@ const DesignConfigator = ({
         width,
         height,
       } = phoneCaseRef.current!.getBoundingClientRect();
-      const {left: containerLeft, top:containerTop } = containerRef.current!.getBoundingClientRect()
+      const { left: containerLeft, top: containerTop } =
+        containerRef.current!.getBoundingClientRect();
+
+      const leftOffset = caseLeft - containerLeft;
+      const topOffset = caseTop - containerTop;
+      const actualX = renderedPosition.x - leftOffset;
+      const actualY = renderedPosition.y - topOffset;
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      const userImage = new Image();
+      userImage.crossOrigin = "anonymous";
+      userImage.src = imageUrl;
+      await new Promise((resolve) => (userImage.onload = resolve));
+      ctx?.drawImage(
+        userImage,
+        actualX,
+        actualY,
+        renderedDimension.width,
+        renderedDimension.height
+      );
+      const base64 = canvas.toDataURL();
+      const base64Data = base64.split(",")[1];
+      const blob = base64ToBlob(base64Data, "image/png");
+      const file = new File([blob], "filename.png", { type: "image/png" });
     } catch (error) {}
   }
+
+  function base64ToBlob(base64: string, mimeType: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+  }
+
   return (
     <div className="relative mt-20 grid md:grid-cols-3 mb-20 pb-20 sm:grid-cols-1 ">
       <div
@@ -110,7 +146,7 @@ const DesignConfigator = ({
           onResizeStop={(_, __, ref, ___, { x, y }) => {
             setRenderedDimension({
               height: parseInt(ref.style.height.slice(0, -2)),
-              widht: parseInt(ref.style.width.slice(0, -2)),
+              width: parseInt(ref.style.width.slice(0, -2)),
             });
             setRenderedPosition({
               x,
