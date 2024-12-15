@@ -12,6 +12,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BASE_PRICE } from "@/config/product";
+import { useToast } from "@/hooks/use-toast";
+import { useUploadThing } from "@/lib/uploadthing";
 import { cn, formatPrice } from "@/lib/utils";
 import {
   COLORS,
@@ -22,6 +24,7 @@ import {
 import { Description, Radio, RadioGroup } from "@headlessui/react";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import NextImage from "next/image";
+import { title } from "process";
 import { useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 
@@ -60,6 +63,8 @@ const DesignConfigator = ({
 
   const phoneCaseRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { startUpload } = useUploadThing("imageUploader");
+  const { toast } = useToast();
 
   async function saveConfiguration() {
     try {
@@ -95,7 +100,15 @@ const DesignConfigator = ({
       const base64Data = base64.split(",")[1];
       const blob = base64ToBlob(base64Data, "image/png");
       const file = new File([blob], "filename.png", { type: "image/png" });
-    } catch (error) {}
+      await startUpload([file], { configId });
+    } catch (error) {
+      toast({
+        title: "Something went wrong!!!",
+        description:
+          "There was a problem saving your config. Please try again.",
+        variant: "destructive",
+      });
+    }
   }
 
   function base64ToBlob(base64: string, mimeType: string): Blob {
@@ -340,7 +353,11 @@ const DesignConfigator = ({
                   BASE_PRICE + options.finish.price + options.material.price
                 )}
               </p>
-              <Button size={"sm"} className="w-full">
+              <Button
+                onClick={saveConfiguration}
+                size={"sm"}
+                className="w-full"
+              >
                 Continue
                 <ArrowRight className="h-4 w-4 ml-1.5 inline " />
               </Button>
