@@ -22,11 +22,14 @@ import {
   MODEL,
 } from "@/validators/option-validator";
 import { Description, Radio, RadioGroup } from "@headlessui/react";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import NextImage from "next/image";
 import { title } from "process";
 import { useRef, useState } from "react";
 import { Rnd } from "react-rnd";
+import { saveConfig as _saveConfig, saveConfigType } from "./actions";
+import { useRouter } from "next/navigation";
 
 interface propsType {
   configId: string;
@@ -39,6 +42,23 @@ const DesignConfigator = ({
   imageDimensions,
   imageUrl,
 }: propsType) => {
+  const router = useRouter();
+  const { mutate: saveConfig } = useMutation({
+    mutationKey: ["save-config"],
+    mutationFn: async (args: saveConfigType) => {
+      await Promise.all([saveConfiguration(), _saveConfig(args)]);
+    },
+    onError: () => {
+      toast({
+        title: "Something went wrong!!!",
+        description: "There is error saving your progress. Please try again",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      router.push(`/configure/preview?id=${configId}`);
+    },
+  });
   const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
     model: (typeof MODEL.options)[number];
@@ -354,7 +374,15 @@ const DesignConfigator = ({
                 )}
               </p>
               <Button
-                onClick={saveConfiguration}
+                onClick={() => {
+                  saveConfig({
+                    color: options.color.value,
+                    finish: options.finish.value,
+                    model: options.model.value,
+                    material: options.material.value,
+                    configId,
+                  });
+                }}
                 size={"sm"}
                 className="w-full"
               >
