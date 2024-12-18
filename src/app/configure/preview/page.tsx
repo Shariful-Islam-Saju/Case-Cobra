@@ -5,7 +5,7 @@ import React from "react";
 import DesignPreview from "./DesignPreview";
 
 const page = async ({ searchParams }: any) => {
-  const { id } = searchParams;
+  const { id } = await searchParams;
   if (!id || typeof id !== "string") {
     notFound();
   }
@@ -17,7 +17,7 @@ const page = async ({ searchParams }: any) => {
   if (!configuration) {
     notFound();
   }
-  return <DesignPreview></DesignPreview>;
+  return <DesignPreview configuration={configuration}></DesignPreview>;
 };
 
 export default page;
