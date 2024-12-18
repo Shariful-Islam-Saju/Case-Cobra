@@ -1,13 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { db } from "@/db";
 import { notFound } from "next/navigation";
 import React from "react";
+import DesignPreview from "./DesignPreview";
 
-const page = ({ searchParams }:any) => {
+const page = async ({ searchParams }: any) => {
   const { id } = searchParams;
   if (!id || typeof id !== "string") {
     notFound();
   }
-  return <div>{id}</div>;
+
+  const configuration = await db.configuration.findUnique({
+    where: { id },
+  });
+
+  if (!configuration) {
+    notFound();
+  }
+  return <DesignPreview></DesignPreview>;
 };
 
 export default page;
