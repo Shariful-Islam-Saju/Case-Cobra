@@ -1,12 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { notFound } from "next/navigation";
 import React from "react";
 
-interface pageProps {
-  searchParams: {
-    [key: string]: string | string[];
-  };
-}
-const page =  ({ searchParams }: pageProps) => {
+const page = ({ searchParams }:any) => {
   const { id } = searchParams;
   if (!id || typeof id !== "string") {
     notFound();
