@@ -14,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { BASE_PRICE } from "@/config/product";
 import { useToast } from "@/hooks/use-toast";
 import { useUploadThing } from "@/lib/uploadthing";
-import { cn, formatPrice } from "@/lib/utils";
+import { cn, formatPrice, modifyFilename } from "@/lib/utils";
 import {
   COLORS,
   FINISHES,
@@ -25,7 +25,6 @@ import { Description, Radio, RadioGroup } from "@headlessui/react";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import NextImage from "next/image";
-import { title } from "process";
 import { useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import { saveConfig as _saveConfig, saveConfigType } from "./actions";
@@ -35,12 +34,14 @@ interface propsType {
   configId: string;
   imageUrl: string;
   imageDimensions: { width: number; height: number };
+  fileName: string;
 }
 
 const DesignConfigator = ({
   configId,
   imageDimensions,
   imageUrl,
+  fileName,
 }: propsType) => {
   const router = useRouter();
   const { mutate: saveConfig } = useMutation({
@@ -119,7 +120,9 @@ const DesignConfigator = ({
       const base64 = canvas.toDataURL();
       const base64Data = base64.split(",")[1];
       const blob = base64ToBlob(base64Data, "image/png");
-      const file = new File([blob], "filename.png", { type: "image/png" });
+      const file = new File([blob], modifyFilename(fileName), {
+        type: "image/png",
+      });
       await startUpload([file], { configId });
     } catch (error) {
       toast({

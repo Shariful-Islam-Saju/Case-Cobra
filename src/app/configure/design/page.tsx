@@ -24,13 +24,14 @@ const Page = async ({ searchParams }: any) => {
     return notFound();
   }
 
-  const { imageUrl, width, height } = configuration;
+  const { imageUrl, width, height, name } = configuration;
 
   return (
     <DesignConfigator
       configId={configuration.id}
       imageDimensions={{ width, height }}
       imageUrl={imageUrl}
+      fileName={name}
     />
   );
 };
