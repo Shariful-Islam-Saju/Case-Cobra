@@ -16,7 +16,7 @@ export function formatPrice(price: number) {
 
 export function modifyFilename(filename:string) {
   // Get the current date in YYYY-MM-DD format
-  const currentDate = new Date().toISOString().split("T")[0];
+  const currentDate = Date.now();
 
   // Extract the file name and extension
   const [name, extension] = filename.split(".");
