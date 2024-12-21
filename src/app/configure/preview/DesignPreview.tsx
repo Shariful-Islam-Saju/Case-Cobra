@@ -5,6 +5,7 @@ import { BASE_PRICE, PRODUCT_PRICES } from "@/config/product";
 import { cn, formatPrice } from "@/lib/utils";
 import { COLORS, MODEL } from "@/validators/option-validator";
 import { Configuration } from "@prisma/client";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
@@ -18,6 +19,11 @@ const DesignPreview = ({ configuration }: pageProps) => {
   const tw = COLORS.find(
     (supportedColor) => supportedColor.value === color
   )?.tw;
+
+  const {} = useMutation({
+    mutationKey:['get-checkout-session'],
+    
+  })
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { label: modelLabel } = MODEL.options.find(
