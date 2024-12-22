@@ -14,7 +14,7 @@ export function formatPrice(price: number) {
   return formatter.format(price);
 }
 
-export function modifyFilename(filename:string) {
+export function modifyFilename(filename: string) {
   // Get the current date in YYYY-MM-DD format
   const currentDate = Date.now();
 
@@ -23,4 +23,13 @@ export function modifyFilename(filename:string) {
 
   // Return the new filename
   return `${name}-${currentDate}.${extension}`;
+}
+
+export function isValidUrl(url: string) {
+  try {
+    new URL(url); // Throws an error if the URL is invalid
+    return true;
+  } catch {
+    return false;
+  }
 }

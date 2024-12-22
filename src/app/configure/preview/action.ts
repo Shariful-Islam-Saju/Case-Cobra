@@ -3,6 +3,7 @@
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/product";
 import { db } from "@/db";
 import { stripe } from "@/lib/stripe";
+import { isValidUrl } from "@/lib/utils";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Order } from "@prisma/client";
 
@@ -38,7 +39,7 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
     order = existingOrder;
   } else {
     console.log({ price, userId: user.id, configId: configuration.id });
-    order =  await db.order.create({
+    order = await db.order.create({
       data: {
         amount: price,
         userId: user.id,
@@ -49,7 +50,9 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
 
   const product = await stripe.products.create({
     name: configuration.name,
-    images: [configuration.imageUrl],
+    images: configuration.croppedImageUrl
+      ? [configuration.croppedImageUrl]
+      : [configuration.imageUrl],
     default_price_data: {
       currency: "BDT",
       unit_amount: price * 100, // Stripe requires amounts in cents
@@ -60,16 +63,20 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
     product.default_price as string
   );
 
+  const success_url = `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`;
+  const cancel_url = `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`;
+  console.log(isValidUrl(success_url), isValidUrl(cancel_url));
   const stripeSession = await stripe.checkout.sessions.create({
-    success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}thank-you?orderId=${order.id}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
-    payment_method_types: ["card", "paypal"],
-    shipping_address_collection: { allowed_countries: ["BA", "IN", "US"] },
+    success_url,
+    cancel_url,
+    payment_method_types: ["card"],
+    shipping_address_collection: { allowed_countries: ["IN", "US"] },
     metadata: {
       userId: user.id,
       orderId: order.id,
     },
     line_items: [{ price: priceData.id, quantity: 1 }], // Use price ID here
+    mode: "payment",
   });
 
   return { url: stripeSession.url };
