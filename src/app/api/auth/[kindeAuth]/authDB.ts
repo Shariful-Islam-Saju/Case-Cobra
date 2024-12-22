@@ -5,14 +5,14 @@ interface propsType {
   email: string;
 }
 export async function createAccount({ id, email }: propsType) {
-  const user = db.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       id,
     },
   });
 
   if (!user) {
-    db.user.create({
+    await db.user.create({
       data: {
         email,
         id,

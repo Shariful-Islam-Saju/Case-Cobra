@@ -44,7 +44,7 @@ const DesignConfigator = ({
   fileName,
 }: propsType) => {
   const router = useRouter();
-  const { mutate: saveConfig } = useMutation({
+  const { mutate: saveConfig, isPending } = useMutation({
     mutationKey: ["save-config"],
     mutationFn: async (args: saveConfigType) => {
       await Promise.all([saveConfiguration(), _saveConfig(args)]);
@@ -377,6 +377,9 @@ const DesignConfigator = ({
                 )}
               </p>
               <Button
+                loadingText="Loding"
+                isLoading={isPending}
+                disabled={isPending}
                 onClick={() => {
                   saveConfig({
                     color: options.color.value,

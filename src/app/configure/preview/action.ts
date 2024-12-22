@@ -37,7 +37,8 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
   if (existingOrder) {
     order = existingOrder;
   } else {
-    order = await db.order.create({
+    console.log({ price, userId: user.id, configId: configuration.id });
+    order =  await db.order.create({
       data: {
         amount: price,
         userId: user.id,
@@ -55,28 +56,14 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
     },
   });
 
-
   const priceData = await stripe.prices.retrieve(
     product.default_price as string
   );
 
-
-  // const stripeSession = await stripe.checkout.sessions.create({
-  //   success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}thank-you?orderId=${order.id}`,
-  //   cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
-  //   payment_method_types: ["card", "paypal"],
-  //   shipping_address_collection: { allowed_countries: ["BA", "IN", "US"] },
-  //   metadata: {
-  //     userId: user.id,
-  //     orderId: order.id,
-  //   },
-  //   line_items: [{ price: priceData.id, quantity: 1 }], // Use price ID here
-  // });
-
   const stripeSession = await stripe.checkout.sessions.create({
-    success_url: `http://localhost:3000/thank-you?orderId=123`,
-    cancel_url: `http://localhost:3000//configure/preview?id=2345`,
-    payment_method_types: [ "paypal"],
+    success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}thank-you?orderId=${order.id}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
+    payment_method_types: ["card", "paypal"],
     shipping_address_collection: { allowed_countries: ["BA", "IN", "US"] },
     metadata: {
       userId: user.id,
@@ -86,5 +73,4 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
   });
 
   return { url: stripeSession.url };
-
 };
