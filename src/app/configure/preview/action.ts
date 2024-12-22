@@ -27,6 +27,7 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
   if (material === "polycarbonate")
     price += PRODUCT_PRICES.material.polycarbonate;
   let order: Order | undefined;
+
   const existingOrder = await db.order.findFirst({
     where: {
       userId: user.id,
@@ -50,21 +51,40 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
     images: [configuration.imageUrl],
     default_price_data: {
       currency: "BDT",
-      unit_amount: price,
+      unit_amount: price * 100, // Stripe requires amounts in cents
     },
   });
+
+
+  const priceData = await stripe.prices.retrieve(
+    product.default_price as string
+  );
+
+
+  // const stripeSession = await stripe.checkout.sessions.create({
+  //   success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}thank-you?orderId=${order.id}`,
+  //   cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
+  //   payment_method_types: ["card", "paypal"],
+  //   shipping_address_collection: { allowed_countries: ["BA", "IN", "US"] },
+  //   metadata: {
+  //     userId: user.id,
+  //     orderId: order.id,
+  //   },
+  //   line_items: [{ price: priceData.id, quantity: 1 }], // Use price ID here
+  // });
 
   const stripeSession = await stripe.checkout.sessions.create({
-    success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}thank-you?orderId=${order.id}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
-    payment_method_types: ["card", "paypal"],
+    success_url: `http://localhost:3000/thank-you?orderId=123`,
+    cancel_url: `http://localhost:3000//configure/preview?id=2345`,
+    payment_method_types: [ "paypal"],
     shipping_address_collection: { allowed_countries: ["BA", "IN", "US"] },
     metadata: {
-      useId: user.id,
+      userId: user.id,
       orderId: order.id,
     },
-    line_items: [{ price: product.default_price as string, quantity: 1 }],
+    line_items: [{ price: priceData.id, quantity: 1 }], // Use price ID here
   });
 
-  return {url: stripeSession.url}
+  return { url: stripeSession.url };
+
 };
