@@ -25,7 +25,7 @@ const DesignPreview = ({ configuration }: pageProps) => {
     (supportedColor) => supportedColor.value === color
   )?.tw;
 
-  const {mutate: createPaymentSession} = useMutation({
+  const { mutate: createPaymentSession, isPending } = useMutation({
     mutationKey: ["get-checkout-session"],
     mutationFn: createCheckoutSession,
     onSuccess: ({ url }) => {
@@ -109,7 +109,7 @@ const DesignPreview = ({ configuration }: pageProps) => {
                 <div className="flex items-center justify-between py-1 mt-2">
                   <p className="text-gray-600">Base price</p>
                   <p className="font-medium text-gray-900">
-                    {formatPrice(BASE_PRICE )}
+                    {formatPrice(BASE_PRICE)}
                   </p>
                 </div>
 
@@ -142,10 +142,13 @@ const DesignPreview = ({ configuration }: pageProps) => {
 
             <div className="mt-8 flex justify-end pb-12">
               <Button
-                isLoading={false}
+                isLoading={isPending}
+                disabled={isPending}
                 loadingText="Loding"
                 className="px-4 sm:px-6 lg:px-8 "
-                onClick={() => createPaymentSession({config:configuration.id})}
+                onClick={() =>
+                  createPaymentSession({ config: configuration.id })
+                }
               >
                 Check out <ArrowRight className="h-4 w-4 ml-1.5 inline" />
               </Button>
