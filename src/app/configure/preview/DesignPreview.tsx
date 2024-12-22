@@ -9,21 +9,40 @@ import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
+import { createCheckoutSession } from "./action";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 interface pageProps {
   configuration: Configuration;
 }
 const DesignPreview = ({ configuration }: pageProps) => {
+  const router = useRouter();
+  const { toast } = useToast();
   const { color, model, finish, material } = configuration;
   const [showConfetti, setShowConfetti] = useState(false);
   const tw = COLORS.find(
     (supportedColor) => supportedColor.value === color
   )?.tw;
 
-  const {} = useMutation({
-    mutationKey:['get-checkout-session'],
-    
-  })
+  const {mutate: createPaymentSession} = useMutation({
+    mutationKey: ["get-checkout-session"],
+    mutationFn: createCheckoutSession,
+    onSuccess: ({ url }) => {
+      if (url) {
+        router.push(url);
+      } else {
+        throw new Error("Unable to retrieve payment URL");
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Something went wrong",
+        description: "There is an error on our end. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { label: modelLabel } = MODEL.options.find(
@@ -122,7 +141,12 @@ const DesignPreview = ({ configuration }: pageProps) => {
             </div>
 
             <div className="mt-8 flex justify-end pb-12">
-              <Button isLoading={true} loadingText="Loding"  className="px-4 sm:px-6 lg:px-8 ">
+              <Button
+                isLoading={false}
+                loadingText="Loding"
+                className="px-4 sm:px-6 lg:px-8 "
+                onClick={() => createPaymentSession({config:configuration.id})}
+              >
                 Check out <ArrowRight className="h-4 w-4 ml-1.5 inline" />
               </Button>
             </div>
