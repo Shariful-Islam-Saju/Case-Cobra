@@ -57,6 +57,7 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
       currency: "BDT",
       unit_amount: price * 100, // Stripe requires amounts in cents
     },
+    description: "Hello This is me Shariful Islam"
   });
 
   const priceData = await stripe.prices.retrieve(
@@ -65,7 +66,6 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
 
   const success_url = `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`;
   const cancel_url = `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`;
-  console.log(isValidUrl(success_url), isValidUrl(cancel_url));
   const stripeSession = await stripe.checkout.sessions.create({
     success_url,
     cancel_url,
