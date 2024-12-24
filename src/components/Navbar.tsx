@@ -4,18 +4,11 @@ import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { createAccount } from "@/app/api/auth/[kindeAuth]/authDB";
 
 const Navbar = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  if (user) {
-    const { id, email } = user;
-    if (id && email) {
-      createAccount({ id, email });
-    }
-  }
 
   const isAdmin = process.env.ADMIN_EMAIL === user?.email;
   return (
