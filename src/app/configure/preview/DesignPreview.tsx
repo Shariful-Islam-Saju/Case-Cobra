@@ -25,7 +25,7 @@ const DesignPreview = ({ configuration }: pageProps) => {
   const { user } = useKindeBrowserClient();
   const { color, model, finish, material } = configuration;
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
-  const [isLoginModelOpen, setIsLoginModelOpen] = useState<boolean>(true);
+  const [isLoginModelOpen, setIsLoginModelOpen] = useState<boolean>(false);
   const tw = COLORS.find(
     (supportedColor) => supportedColor.value === color
   )?.tw;
