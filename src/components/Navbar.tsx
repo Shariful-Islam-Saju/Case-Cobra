@@ -22,7 +22,7 @@ const Navbar = async () => {
             {user ? (
               <>
                 <Link
-                  href={"api/auth/logout"}
+                  href={"/api/auth/logout"}
                   className={buttonVariants({
                     size: "sm",
                     variant: "ghost",
