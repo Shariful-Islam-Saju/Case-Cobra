@@ -67,7 +67,7 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
   const stripeSession = await stripe.checkout.sessions.create({
     success_url,
     cancel_url,
-    payment_method_types: ["card", "alipay", "paypal", "amazon_pay"],
+    payment_method_types: ["card"],
     shipping_address_collection: { allowed_countries: ["IN", "US"] },
     metadata: {
       userId: user.id,
