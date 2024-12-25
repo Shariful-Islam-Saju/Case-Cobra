@@ -8,9 +8,11 @@ export async function POST(req: Request) {
   try {
     const body = await req.text();
     const signature = (await headers()).get("stripe-signature");
+
     if (!signature) {
       return new Response("Invalid signature", { status: 400 });
     }
+
     const event = stripe.webhooks.constructEvent(
       body,
       signature,
@@ -18,47 +20,43 @@ export async function POST(req: Request) {
     );
 
     if (event.type === "checkout.session.completed") {
-      if (!event.data.object.customer_details?.email) {
-        throw new Error("Missing user email");
-      }
-
       const session = event.data.object as Stripe.Checkout.Session;
 
-      const { userId, orderId } = session.metadata || {
-        userId: null,
-        orderId: null,
-      };
-      if (!userId || !orderId) {
-        throw new Error("Invalid request metadata");
+      const email = session.customer_details?.email;
+      if (!email) throw new Error("Missing user email");
+
+      const { userId, orderId } = session.metadata || {};
+      if (!userId || !orderId) throw new Error("Invalid request metadata");
+
+      const billingAddress = session.customer_details?.address;
+      const shippingAddress = session.shipping_details?.address;
+
+      if (!billingAddress || !shippingAddress) {
+        throw new Error("Missing address details");
       }
-      console.log(userId, orderId);
-      const billingAddress = session.customer_details!.address!;
-      const shippingAddress = session.shipping_details!.address!;
 
       await db.order.update({
-        where: {
-          id: orderId,
-        },
+        where: { id: orderId },
         data: {
           isPaid: true,
           ShippingAddress: {
             create: {
-              name: session.customer_details!.name!,
-              city: shippingAddress!.city!,
-              country: shippingAddress!.country!,
-              postalCode: shippingAddress!.postal_code!,
-              street: shippingAddress!.line1!,
-              state: shippingAddress!.state!,
+              name: session.customer_details?.name || "Unknown",
+              city: shippingAddress.city || "Unknown",
+              country: shippingAddress.country || "Unknown",
+              postalCode: shippingAddress.postal_code || "Unknown",
+              street: shippingAddress.line1 || "Unknown",
+              state: shippingAddress.state || "Unknown",
             },
           },
           BillingAddress: {
             create: {
-              name: session.customer_details!.name!,
-              city: billingAddress!.city!,
-              country: billingAddress!.country!,
-              postalCode: billingAddress!.postal_code!,
-              street: billingAddress!.line1!,
-              state: billingAddress!.state!,
+              name: session.customer_details?.name || "Unknown",
+              city: billingAddress.city || "Unknown",
+              country: billingAddress.country || "Unknown",
+              postalCode: billingAddress.postal_code || "Unknown",
+              street: billingAddress.line1 || "Unknown",
+              state: billingAddress.state || "Unknown",
             },
           },
         },
@@ -66,10 +64,15 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ result: event, ok: true });
-  } catch (error) {
-    console.log(error);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("Webhook Error:", error.message);
+
     return NextResponse.json(
-      { message: "Something went wrong", ok: false },
+      {
+        message: error.message || "Something went wrong",
+        ok: false,
+      },
       { status: 500 }
     );
   }
