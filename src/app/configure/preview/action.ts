@@ -3,7 +3,6 @@
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/product";
 import { db } from "@/db";
 import { stripe } from "@/lib/stripe";
-import { isValidUrl } from "@/lib/utils";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Order } from "@prisma/client";
 
@@ -57,7 +56,6 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
       currency: "BDT",
       unit_amount: price * 100, // Stripe requires amounts in cents
     },
-    description: "Hello This is me Shariful Islam"
   });
 
   const priceData = await stripe.prices.retrieve(
@@ -69,7 +67,7 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
   const stripeSession = await stripe.checkout.sessions.create({
     success_url,
     cancel_url,
-    payment_method_types: ["card"],
+    payment_method_types: ["card", "alipay", "paypal", "amazon_pay"],
     shipping_address_collection: { allowed_countries: ["IN", "US"] },
     metadata: {
       userId: user.id,
