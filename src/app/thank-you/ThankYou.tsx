@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
@@ -20,7 +22,7 @@ const ThankYou = () => {
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
           <h3 className="font-semibold text-xl">Loading your order...</h3>
-          <p>This won't take long </p>
+          <p>This won&apos;t take long </p>
         </div>
       </div>
     );
