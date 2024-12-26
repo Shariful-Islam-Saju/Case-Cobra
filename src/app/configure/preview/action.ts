@@ -37,7 +37,6 @@ export const createCheckoutSession = async ({ config }: { config: string }) => {
   if (existingOrder) {
     order = existingOrder;
   } else {
-    console.log({ price, userId: user.id, configId: configuration.id });
     order = await db.order.create({
       data: {
         amount: price,
