@@ -13,7 +13,7 @@ const StatusDropdown = ({
     fulfilled: "Fulfilled",
     shipped: "Shipped",
   };
-  return <div>StatusDropdown</div>;
+  return <div>{LABEL_MAP.fulfilled}</div>;
 };
 
 export default StatusDropdown;
