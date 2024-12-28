@@ -29,7 +29,8 @@ const LoginModel = ({ isOpen, setIsOpen }: propsType) => {
                 alt="snake image"
               />
             </div>
-            <DialogTitle>Log in to continue</DialogTitle>
+            
+            <DialogTitle className="text-center">Log in to continue</DialogTitle>
             <DialogDescription className="text-base text-center py-2 ">
               <span className="font-medium text-zinc-900">
                 Your configuration was saved!
