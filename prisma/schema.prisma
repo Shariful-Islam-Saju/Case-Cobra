@@ -56,7 +56,6 @@ model Configuration {
 model User {
   id        String   @id @default(cuid())
   email     String
-  password  String
   Order     Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
