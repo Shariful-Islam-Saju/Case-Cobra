@@ -25,7 +25,7 @@ import { Description, Radio, RadioGroup } from "@headlessui/react";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import NextImage from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import { saveConfig as _saveConfig, saveConfigType } from "./actions";
 import { useRouter } from "next/navigation";
@@ -71,6 +71,10 @@ const DesignConfigator = ({
     finish: FINISHES.options[0],
     material: MATERIALS.options[0],
   });
+
+  useEffect(() => {
+    localStorage.removeItem("configurationId");
+  }, []);
 
   const [renderedDimension, setRenderedDimension] = useState({
     width: imageDimensions.width / 3,
