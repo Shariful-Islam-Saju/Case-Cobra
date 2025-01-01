@@ -31,12 +31,15 @@ const page = async () => {
   const user = await getUser();
 
   if (!user) {
+    console.log(user, process.env.ADMIN_EMAIL);
+
     notFound(); // Redirect to login if no user is found
   }
 
   const isAdmin = process.env.ADMIN_EMAIL === user?.email;
 
   if (!isAdmin) {
+    console.log(isAdmin, user, process.env.ADMIN_EMAIL);
     notFound(); // Redirect to home page if not admin
   }
 
