@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/table";
 import { db } from "@/db";
 import { formatPrice } from "@/lib/utils";
-// import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-// import { notFound } from "next/navigation";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { notFound } from "next/navigation";
 import React from "react";
 import StatusDropdown from "./StatusDropdown";
 
@@ -26,21 +26,21 @@ const page = async () => {
   const WEEKLY_GOAL = 5000;
   const MONTHLY_GOAL = 20000;
 
-  // const { getUser } = getKindeServerSession();
+  const { getUser } = getKindeServerSession();
 
-  // const user = await getUser();
-  // if (!user) {
-  //   console.log(user, process.env.ADMIN_EMAIL);
+  const user = await getUser();
+  if (!user) {
+    console.log(user, process.env.ADMIN_EMAIL);
 
-  //   notFound(); // Redirect to login if no user is found
-  // }
+    notFound(); // Redirect to login if no user is found
+  }
 
-  // const isAdmin = process.env.ADMIN_EMAIL === user?.email;
+  const isAdmin = process.env.ADMIN_EMAIL === user?.email;
 
-  // if (!isAdmin) {
-  //   console.log(isAdmin, user, process.env.ADMIN_EMAIL);
-  //   notFound(); // Redirect to home page if not admin
-  // }
+  if (!isAdmin) {
+    console.log(isAdmin, user, process.env.ADMIN_EMAIL);
+    notFound(); // Redirect to home page if not admin
+  }
 
   const orders = await db.order.findMany({
     where: {
