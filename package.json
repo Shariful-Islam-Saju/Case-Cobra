@@ -29,7 +29,7 @@
     "cors": "^2.8.5",
     "framer-motion": "^11.12.0",
     "lucide-react": "^0.456.0",
-    "next": "15.0.3",
+    "next": "15.0.7",
     "next-auth": "^5.0.0-beta.25",
     "prisma": "^6.0.1",
     "react": "^18.3.1",
